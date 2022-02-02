@@ -1,1 +1,2 @@
-*Romeo and Juliet*
+#!bin/bash
+script para mostrar la ruta

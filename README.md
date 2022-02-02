@@ -1,1 +1,2 @@
-*Keep calm and look for the mistake*
+#!bin/bash
+scripts
