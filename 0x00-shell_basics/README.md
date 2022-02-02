@@ -1,2 +1,1 @@
-#!bin/bash
-script para mostrar la ruta
+Script to print the route
