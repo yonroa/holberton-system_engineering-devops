@@ -1,2 +1,0 @@
-#!/bin/bash
-cut -f 1 -d [[:blank:]] | sort | uniq -c | tr -s [[:space:]] | sort -t [[:space:]] -k=1 -nr | head -n 11 | cut -d [[:space:]] -f 3
