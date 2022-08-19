@@ -1,7 +1,7 @@
 # Create the file school in /tmp
-file {'school':
-  path    => '/tmp/school',
+file {'/tmp/school':
   ensure  => 'file',
+  path    => '/tmp/school',
   content => 'I love Puppet',
   group   => 'www-data',
   mode    => '0744',
