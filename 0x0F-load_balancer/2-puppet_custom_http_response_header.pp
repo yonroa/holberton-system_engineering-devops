@@ -1,35 +1,47 @@
-# puppet manifest creating a custom HTTP header response
-exec { 'apt-get-update':
-  command => '/usr/bin/apt-get update',
+include stdlib
+
+$link = 'https://www.youtube.com/watch?v=QH2-TGUlwu4'
+$content = "\trewrite ^/redirect_me/$ ${link} permanent;"
+$custom_header = "add_header X-Served-By \$hostname;"
+
+exec { 'update packages':
+  command => '/usr/bin/apt-get update'
+}
+
+exec { 'restart nginx':
+  command => '/usr/sbin/service nginx restart',
+  require => Package['nginx']
 }
 
 package { 'nginx':
-  ensure  => installed,
-  require => Exec['apt-get-update'],
-}
-
-file_line { 'redirect-301':
-  ensure  => 'present',
-  path    => '/etc/nginx/sites-available/default',
-  after   => 'listen 80 default_server;',
-  line    => 'rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;',
-  require => Package['nginx'],
-}
-
-file_line { 'header X-Served-By':
-  ensure  => 'present',
-  path    => '/etc/nginx/sites-available/default',
-  after   => 'listen 80 default_server;',
-  line    => 'add_header X-Served-By $hostname;',
-  require => Package['nginx'],
+  ensure  => 'installed',
+  require => Exec['update packages']
 }
 
 file { '/var/www/html/index.html':
+  ensure  => 'present',
   content => 'Hello World',
-  require => Package['nginx'],
+  mode    => '0644',
+  owner   => 'root',
+  group   => 'root'
 }
 
-service { 'nginx':
-  ensure  => running,
-  require => Package['nginx'],
+file_line { 'Set 301 redirection':
+  ensure   => 'present',
+  after    => 'server_name\ _;',
+  path     => '/etc/nginx/sites-available/default',
+  multiple => true,
+  line     => $content,
+  notify   => Exec['restart nginx'],
+  require  => File['/var/www/html/index.html']
+}
+
+file_line { 'Set X-Served-By header':
+  ensure   => 'present',
+  after    => 'http {',
+  path     => '/etc/nginx/nginx.conf',
+  multiple => true,
+  line     => $custom_header,
+  notify   => Exec['restart nginx'],
+  require  => File['/var/www/html/index.html']
 }
