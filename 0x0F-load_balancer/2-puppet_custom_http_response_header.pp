@@ -1,3 +1,4 @@
+# puppet manifest creating a custom HTTP header response
 include stdlib
 
 $link = 'https://www.youtube.com/watch?v=QH2-TGUlwu4'
