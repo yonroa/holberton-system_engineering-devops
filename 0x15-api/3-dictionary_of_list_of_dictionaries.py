@@ -2,8 +2,8 @@
 """for a given employee ID, returns information
 about his/her TODO list progress
 """
-import requests
 import json
+import requests
 if __name__ == "__main__":
     users = requests.get("https://jsonplaceholder.typicode.com/users").json()
     user_dict = {}

@@ -2,9 +2,9 @@
 """for a given employee ID, returns information
 about his/her TODO list progress
 """
-import sys
-import requests
 import csv
+import requests
+import sys
 if __name__ == "__main__":
     user = requests.get("https://jsonplaceholder.typicode.com/users/{}"
                         .format(sys.argv[1])).json()
